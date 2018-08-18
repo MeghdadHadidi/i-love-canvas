@@ -1,23 +1,28 @@
 class Star {
     constructor(options = {}){
-        this.xVelocity = options.velocity || (Math.random() - 0.5) * 8;
-        this.yVelocity = options.velocity || (Math.random() - 0.5) * 8;
+        this.xVelocity = options.velocity || (Math.random() - 0.5);
+        this.yVelocity = options.velocity || (Math.random() - 0.5);
 
         this.colorSets = [
-            {r: 0, g: 0, b: 0 },
-            {r: 0, g: 0, b: 0 },
-            {r: 70, g: 5, b: 5 }
+            '#ff4c00',
+            '#000000',
+            '#aec8e8',
+            '#c5d2e2'
         ]
 
-        this.color = options.color || this.colorSets[this.getRandomInt()];
+        this.mouse = options.mouse;
+
+        const randomColor = this.getRandomInt(0, this.colorSets.length - 1);
+        this.color = options.color || this.colorSets[randomColor];
 
         this.alpha = options.alpha || this.getRandom();
 
-        this.radius = options.radius || this.getRandomInt(3, 8);
+        this.minRadius = options.minRadius || this.getRandomInt(2, 5);
+        this.radius = this.minRadius;
+        this.maxRadius = options.maxRadius || 30;
 
         this.x = Math.random() * (innerWidth - this.radius * 2) + this.radius;
         this.y = Math.random() * (innerWidth - this.radius * 2) + this.radius;
-        this.z = Math.floor(Math.random() * 20) + 1;
     }
 
     getRandom(min = 0, max = 1) {
@@ -28,16 +33,15 @@ class Star {
         return n;
     }
 
-    getRandomInt(min = 0, max = 2) {
+    getRandomInt(min = 0, max = 1) {
         let n = Math.floor(Math.random() * (max - min + 1) + min);
-        console.log("int: ", n);
         return n;
     }
     
     show(){
         context.beginPath();
-        context.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${this.alpha})`;
-        context.arc(this.x - this.radius, this.y - this.radius, this.radius, 0, Math.PI * 2);
+        context.fillStyle = this.color;
+        context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         context.fill();
     }
 
@@ -53,8 +57,27 @@ class Star {
         this.x += this.xVelocity;
         this.y += this.yVelocity;
 
+        if(this.mouse.x - this.x < 50 && this.mouse.x - this.x > -50 
+            && this.mouse.y - this.y < 50 && this.mouse.y - this.y > -50
+            ){
+            this.grow();
+        } else {
+            this.shrink();
+        }
+
         this.show();
     }
 
+    grow(){
+        if(this.radius < this.maxRadius){
+            this.radius += 1;
+        }
+    }
+
+    shrink(){
+        if(this.radius > this.minRadius){
+            this.radius -= 1;
+        }
+    }
 
 }

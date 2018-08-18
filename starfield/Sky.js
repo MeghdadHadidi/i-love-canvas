@@ -3,11 +3,18 @@ class Sky {
         this.stars = [];
         this.paused = false;
         this.frequency = options.frequency || 100;
+
+        this.mouse = {x: 0, y: 0}
+
+        document.addEventListener('mousemove', (event) => {
+            this.mouse.x = event.x;
+            this.mouse.y = event.y;
+        });
     }
 
     show(){
         for(let i = 0; i < this.frequency; i++){
-            this.stars[i] = new Star();
+            this.stars[i] = new Star({mouse: this.mouse});
             this.stars[i].show();
         }
     }
