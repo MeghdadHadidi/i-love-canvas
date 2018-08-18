@@ -5,13 +5,13 @@ class Star {
 
         this.colorSets = [
             {r: 0, g: 0, b: 0 },
+            {r: 0, g: 0, b: 0 },
             {r: 70, g: 5, b: 5 }
         ]
 
         this.color = options.color || this.colorSets[this.getRandomInt()];
 
         this.alpha = options.alpha || this.getRandom();
-        console.log(this.color.r, this.alpha);
 
         this.radius = options.radius || this.getRandomInt(3, 8);
 
@@ -21,16 +21,17 @@ class Star {
     }
 
     getRandom(min = 0, max = 1) {
-        let n = Math.random() * (max - min) + min;
-        if(n > 0.92){
+        let n = parseFloat((Math.random() * (max - min) + min).toFixed(1));
+        if(n > 0.88){
             n = Math.round(n)
         }
-
         return n;
     }
 
-    getRandomInt(min = 0, max = 1) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+    getRandomInt(min = 0, max = 2) {
+        let n = Math.floor(Math.random() * (max - min + 1) + min);
+        console.log("int: ", n);
+        return n;
     }
     
     show(){
