@@ -4,10 +4,10 @@ class Star {
         this.yVelocity = options.velocity || (Math.random() - 0.5);
 
         this.colorSets = [
-            '#ff4c00',
             '#000000',
-            '#aec8e8',
-            '#c5d2e2'
+            '#586F7C',
+            '#B8DBD9',
+            '#04724D'
         ]
 
         this.mouse = options.mouse;
