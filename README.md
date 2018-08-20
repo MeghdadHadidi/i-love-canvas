@@ -1,2 +1,2 @@
-# ten-minute-challenges
-Some Quick JavaScript Coding Challenges 
+# I Love Canvas
+Some Quick Canvas Coding Challenges 
