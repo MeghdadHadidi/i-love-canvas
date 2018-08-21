@@ -4,7 +4,7 @@ class Sky {
         this.paused = false;
         this.frequency = options.frequency || 100;
 
-        this.mouse = {x: 0, y: 0}
+        this.mouse = {x: undefined, y: undefined}
 
         document.addEventListener('mousemove', (event) => {
             this.mouse.x = event.x;
