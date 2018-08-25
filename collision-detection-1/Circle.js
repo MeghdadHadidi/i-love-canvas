@@ -19,10 +19,10 @@ class Circle {
     }
 
     update(cond){
-        if(cond){
+        // if(cond){
             this.x = mouse.x
             this.y = mouse.y
-        }
+        // }
 
         return this;
     }
