@@ -8,10 +8,24 @@ function setCanvasSize(width, height){
     canvas.height = height || window.innerHeight - 20
 }
 
+window.requestAnimFrame = (function(){
+    return  window.requestAnimationFrame || 
+    window.webkitRequestAnimationFrame   || 
+    window.mozRequestAnimationFrame      || 
+    window.oRequestAnimationFrame        || 
+    window.msRequestAnimationFrame       || 
+    function(callback, element){
+        window.setTimeout(function(){
+           
+            callback(+performance.now);
+        }, 1000 / 60);
+    };
+})();
+
 window.addEventListener('resize', setCanvasSize)
 
 let particles = [];
-let scene = new Scene({ frequency: 500, particles });
+let scene = new Scene({ frequency: 3000, particles });
 scene.show();
 scene.animate();
 

@@ -3,6 +3,8 @@ class Scene {
         this.particles = options.particles;
         this.paused = false;
         this.frequency = options.frequency || 100;
+        this.lastRun = 0;
+        this.showFps = true;
     }
 
     /**
@@ -25,7 +27,6 @@ class Scene {
     show(){
         for(let i = 0; i < this.frequency; i++){
             this.particles[i] = new Particle({ mouse: this.mouse, particles: this.particles });
-            debugger;
 
             for(let j = 0; j < this.particles.length; j++){
                 if(j === i) continue;
@@ -40,30 +41,58 @@ class Scene {
         }
     }
 
-    animate(speed){
-        setTimeout(() => {
-            requestAnimationFrame(() => {
-                this.animate(speed)
+    printFps(){
+        let fpsDiv = document.getElementById('fps');
+        if(this.showFps){
+            if(fpsDiv){
+                fpsDiv.className = 'active';
+                return fpsDiv.innerHTML = 'Framerate: ' + this.calculateFps().toFixed(2) + ' fps';
+            }
+            
+            console.log(this.calculateFps());
+        }
+        else{
+            if(fpsDiv){
+                fpsDiv.className = '';
+            }
+        }
+    }
+
+    calculateFps(){
+        let delta = (performance.now() - this.lastRun)/1000;
+        this.lastRun = performance.now();
+        return 1/delta;
+    }
+
+    animate() {
+        if(!this.paused){
+            if(!this.lastRun){
+                this.lastRun = performance.now();
+                requestAnimFrame(() => this.animate());
+                return;
+            }
+    
+            this.printFps();
+    
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            
+            context.fillStyle = '#fff';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+    
+            this.particles = this.particles.sort((a, b) => {
+                return a.z < b.z
             })
-        }, speed || 0)
-
-        if(this.paused) return;
-
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        
-        context.fillStyle = '#fff';
-        context.fillRect(0, 0, canvas.width, canvas.height);
-
-        this.particles = this.particles.sort((a, b) => {
-            return a.z < b.z
-        })
-
-        this.particles.forEach((particle) => {
-            particle.animate();
-        });
+    
+            this.particles.forEach((particle) => {
+                particle.animate();
+            });
+    
+            requestAnimFrame(() => this.animate())
+        }
     }
 
     pause(){
         this.paused = !this.paused;
+        this.animate();
     }
 }
