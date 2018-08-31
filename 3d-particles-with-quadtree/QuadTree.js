@@ -14,7 +14,8 @@ class QuadTree{
             return true;
         } else {
             if(!this.divided){
-                this.subdivide();            }
+                this.subdivide();            
+            }
             if(this.northwest.insert(point)) return true;
             if(this.northeast.insert(point)) return true;
             if(this.southwest.insert(point)) return true;
@@ -25,7 +26,10 @@ class QuadTree{
     }
 
     query(range, found){
-        found = found || [];
+        if(!found) {
+            found = [];
+        }
+        
         if(!this.boundary.intersects(range)){
             return found;
         } else {
@@ -41,9 +45,9 @@ class QuadTree{
                 this.southwest.query(range, found);
                 this.southeast.query(range, found);
             }
-
-            return found;
         }
+
+        return found;
     }
 
     show(){

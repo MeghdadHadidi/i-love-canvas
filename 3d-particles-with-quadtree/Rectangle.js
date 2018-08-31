@@ -8,9 +8,9 @@ class Rectangle {
 
     contains(point){
         return (
-            point.x >= this.x - this.w &&
+            point.x >= this.x &&
             point.x <= this.x + this.w &&
-            point.y >= this.y - this.h &&
+            point.y >= this.y &&
             point.y <= this.y + this.h
         )
     }

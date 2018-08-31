@@ -31,12 +31,13 @@ class Scene {
         this.quadtree = new QuadTree({ boundary: bnd });
         for(let i = 0; i < this.frequency; i++){
             this.particles[i] = new Particle({ mouse: this.mouse, particles: this.particles });
-
-            for(let j = 0; j < this.particles.length; j++){
+            let range = new Rectangle({ x: this.x - this.radius * 4, y: this.y - this.radius * 4, w: this.radius * 8, h: this.radius * 8 });
+            let inRangeParticles = scene.quadtree.query(range);
+            for(let j = 0; j < inRangeParticles.length; j++){
                 if(j === i) continue;
     
-                if(this.distance(this.particles[i], this.particles[j]) - (this.particles[i].radius + this.particles[j].radius) < 0){
-                    this.particles[i].setRandomSize();
+                if(this.distance(inRangeParticles[i], inRangeParticles[j]) - (inRangeParticles[i].radius + inRangeParticles[j].radius) < 0){
+                    inRangeParticles[i].setRandomSize();
                     j = -1;
                 }
             }
@@ -47,17 +48,17 @@ class Scene {
 
         // this.quadtree.show();
 
-        let area = new Rectangle({ x: 100, y: 100, w: 450, h: 450 });
-        context.beginPath();
-        context.shadowBlur = 0;
-        context.shadowOffsetX = 0;
-        context.shadowOffsetY = 0;
-        context.strokeStyle = 'rgb(0, 255, 0)';
-        context.lineWidth = 3;
-        context.strokeRect(area.w, area.y, area.w, area.h);
+        // let area = new Rectangle({ x: 100, y: 100, w: 450, h: 450 });
+        // context.beginPath();
+        // context.shadowBlur = 0;
+        // context.shadowOffsetX = 0;
+        // context.shadowOffsetY = 0;
+        // context.strokeStyle = 'rgb(0, 255, 0)';
+        // context.lineWidth = 3;
+        // context.strokeRect(area.w, area.y, area.w, area.h);
 
-        let particlesFoundInRange = this.quadtree.query(area);
-        console.log(particlesFoundInRange);
+        // let particlesFoundInRange = this.quadtree.query(area);
+        // console.log(particlesFoundInRange);
     }
 
     printFps(){
@@ -111,9 +112,13 @@ class Scene {
             this.particles = this.particles.sort((a, b) => {
                 return a.z < b.z
             })
+
+            let bnd = new Rectangle({ x: 0, y: 0, w: canvas.width, h: canvas.height });
+            this.quadtree = new QuadTree({ boundary: bnd });
     
             this.particles.forEach((particle) => {
                 particle.animate();
+                this.quadtree.insert(particle);
             });
     
             requestAnimFrame(() => this.animate())

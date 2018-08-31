@@ -1,5 +1,6 @@
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
+var mouse = {x: undefined, y: undefined};
 
 setCanvasSize(1024, 768)
 
@@ -23,11 +24,15 @@ window.requestAnimFrame = (function(){
 })();
 
 window.addEventListener('resize', setCanvasSize)
+window.addEventListener('mousemove', (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+})
 
 let particles = [];
-let scene = new Scene({ frequency: 6, particles });
+let scene = new Scene({ frequency: 3000, particles });
 scene.show();
-// scene.animate();
+scene.animate();
 
 canvas.addEventListener('click', function(){
     scene.pause();

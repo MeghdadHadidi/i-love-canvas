@@ -1,6 +1,7 @@
 class Particle {
     constructor(options = {}){
         this.z = this.getRandomInt(1, 10);
+        // this.z = 1;
 
         this.color = options.color || `hsla(0, 0%, ${this.z == 10 ? 100 : (this.z / 8) * 100}%, 1)`;
         this.blur = options.blur ? `blur(${options.blur}px)` : (10 - this.z < 5) ? `blur(${(10 - this.z)}px)` : `none`;
@@ -92,7 +93,7 @@ class Particle {
         const yDist = otherParticle.y - particle.y;
 
         // Prevent accidental overlap of particles
-        if (xVelocityDiff * xDist + yVelocityDiff * yDist >= 0 && particle.z === otherParticle.z) {
+        if (xVelocityDiff * xDist + yVelocityDiff * yDist >= 0) {
 
             // Grab angle between the two colliding particles
             const angle = -Math.atan2(otherParticle.y - particle.y, otherParticle.x - particle.x);
@@ -125,20 +126,38 @@ class Particle {
     show(){
         context.beginPath();
         context.shadowColor = "rgba(0, 0, 0, 0.4)";
-        context.shadowBlur = 10;
-        context.shadowOffsetX = 0;
-        context.shadowOffsetY = 0;
+        // context.shadowBlur = 10;
+        // context.shadowOffsetX = 0;
+        // context.shadowOffsetY = 0;
         context.fillStyle = this.color;
         context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         context.fill();
     }
 
     animate(){
-        for(let i = 0; i < this.particles.length; i++){
-            if(this === this.particles[i]) continue;
+        let range = new Rectangle({ x: this.x - this.radius * 2, y: this.y - this.radius * 2, w: this.radius * 4, h: this.radius * 4 });
+        // context.beginPath();
+        // context.shadowBlur = 0;
+        // context.shadowOffsetX = 0;
+        // context.shadowOffsetY = 0;
+        // context.strokeStyle = 'red';
+        // context.strokeRect(range.x, range.y, range.w, range.h);
 
-            if(this.distance(this, this.particles[i]) - (this.radius + this.particles[i].radius) < 0){
-                this.resolveCollision(this, this.particles[i]);
+        // context.beginPath();
+        // context.shadowColor = "green";
+        // context.shadowBlur = 0;
+        // context.shadowOffsetX = 0;
+        // context.shadowOffsetY = 0;
+        // context.fillStyle = this.color;
+        // context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        // context.fill();
+
+        let inRangeParticles = scene.quadtree.query(range);
+        for(let i = 0; i < inRangeParticles.length; i++){
+            if(this === inRangeParticles[i]) continue;
+
+            if(this.distance(this, inRangeParticles[i]) - (this.radius + inRangeParticles[i].radius) < 0){
+                this.resolveCollision(this, inRangeParticles[i]);
             }
         }
 
